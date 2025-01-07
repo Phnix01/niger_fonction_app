@@ -20,7 +20,7 @@ class ArticleAdapter extends TypeAdapter<Article> {
       id: fields[0] as int,
       title: fields[1] as String,
       content: fields[2] as String,
-      isFavoite: fields[3] as bool,
+      isFavorite: fields[3] as bool,
     );
   }
 
@@ -35,7 +35,7 @@ class ArticleAdapter extends TypeAdapter<Article> {
       ..writeByte(2)
       ..write(obj.content)
       ..writeByte(3)
-      ..write(obj.isFavoite);
+      ..write(obj.isFavorite);
   }
 
   @override

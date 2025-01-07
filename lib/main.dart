@@ -1,27 +1,74 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:niger_fonction_app/models/article.dart';
-import 'package:niger_fonction_app/models/note.dart';
+import 'models/article.dart';
+import 'screens/home_screen.dart';
 
 void main() async {
-  // initialisation de hive
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialisation de Hive
   await Hive.initFlutter();
   Hive.registerAdapter(ArticleAdapter());
-  Hive.registerAdapter(NoteAdapter());
 
-  // ouverture des box
-  Hive.openBox<Article>('articles');
-  Hive.openBox<Note>('notes');
+  // Ouvrir la boîte Hive
+  final articlesBox = await Hive.openBox<Article>('articles');
 
-  runApp(const MyApp());
+  // Remplir la boîte avec des données si elle est vide
+  if (articlesBox.isEmpty) {
+    _populateArticles(articlesBox);
+  }
+
+  runApp(MyApp());
+}
+
+void _populateArticles(Box<Article> box) {
+  final articles = [
+    Article(
+      id: 1,
+      title: "Introduction à la Fonction Publique",
+      content:
+          "La fonction publique est essentielle pour le bon fonctionnement de l'État.",
+    ),
+    Article(
+      id: 2,
+      title: "Les droits des fonctionnaires",
+      content:
+          "Les fonctionnaires jouissent de droits fondamentaux, tels que le droit à la rémunération et à la sécurité d'emploi.",
+    ),
+    Article(
+      id: 3,
+      title: "Les obligations des fonctionnaires",
+      content:
+          "Les fonctionnaires doivent respecter les principes de neutralité et de discrétion professionnelle.",
+    ),
+    Article(
+      id: 4,
+      title: "Le recrutement dans la Fonction Publique",
+      content:
+          "Le recrutement se fait par concours pour garantir l'égalité des chances.",
+    ),
+    Article(
+      id: 5,
+      title: "Les sanctions disciplinaires",
+      content:
+          "Des sanctions peuvent être prises en cas de manquement aux obligations professionnelles.",
+    ),
+  ];
+
+  for (var article in articles) {
+    box.put(article.id, article);
+  }
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return MaterialApp(
+      title: 'Niger Fonction',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: HomeScreen(),
+    );
   }
 }
